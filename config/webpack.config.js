@@ -250,10 +250,10 @@ module.exports = function(webpackEnv) {
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: {
-        chunks: 'all',
-        name: false,
-      },
+      // splitChunks: {
+      //   chunks: 'all',
+      //   name: false,
+      // },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       runtimeChunk: !(isEnvDemo || isEnvProduction), // CRL
@@ -548,7 +548,7 @@ module.exports = function(webpackEnv) {
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
           // both options are optional
-          filename: 'static/css/index.css', // CRL
+          filename: 'index.css', // CRL
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
       // Generate a manifest file which contains a mapping of all asset filenames
@@ -618,8 +618,8 @@ module.exports = function(webpackEnv) {
     //  no need to ship React since it's shipped with the main app
     externals: (isEnvDemo || isEnvProduction)
       ? {
-        react: 'react',
-        'react-dom': 'react-dom',
+        // react: 'react',
+        // 'react-dom': 'react-dom',
       }
       : {},
     // Some libraries import Node modules but don't use them in the browser.

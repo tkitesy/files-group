@@ -1,8 +1,10 @@
-import Example from './components/Example';
-import SecondExample from './components/SecondExample';
+import 'babel-polyfill'
+import FilesGroup from './components/files-group';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-export default Example;
+export default FilesGroup;
 
-export {
-  SecondExample,
-};
+window.renderFilesGroup = function(mountNode,groups=[], option={}){
+    ReactDOM.render(<FilesGroup groups={groups} option={option} />, mountNode)
+}
