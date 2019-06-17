@@ -36,15 +36,25 @@
     <script src="build/index.js"></script>
     <script>
       var groups = [
-        { groupName: "jpg", groupTitle: "jpg图片", groupDesc: "jpg files" },
-        { groupName: "png", groupTitle: "png图片", groupDesc: "png files" },
-        { groupName: "null", groupTitle: "未分类", groupDesc: "html files" }
+        {
+          groupName: "jpg",
+          groupTitle: "jpg图片",
+          groupDesc: "jpg files",
+          validate:function(files) {
+            if (files.length === 0) {
+              return "至少包含一个文件";
+            }
+            return true;
+          }
+        },
+        { groupName: "png", groupTitle: "png图片", groupDesc: "png files" }
       ];
       var option = {
-        onChange: function(files){
-          console.log(files)
-        } 
-      }
+        onChange: function(files, errors) {
+          console.log(files);
+          console.log(errors);
+        }
+      };
       renderFilesGroup(document.getElementById("root"), groups, option);
     </script>
   </body>

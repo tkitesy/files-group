@@ -1,12 +1,10 @@
-import React, { useContext, useRef, useEffect } from "react";
+import React, {  useRef, useEffect } from "react";
 import { css, cx } from "emotion";
-import { FilesContext, getId } from "./common";
 import FileItem from "./file-item";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
 
-export default function Files({ setDragging, group }) {
-  const { files } = useContext(FilesContext);
+export default function Files({ setDragging, files }) {
   const ref = useRef();
   const styles = css`
     ul {
@@ -21,15 +19,17 @@ export default function Files({ setDragging, group }) {
       margin-right: 6px;
       margin-top: 6px;
     }
+    .empty{
+      text-align: center;
+    }
   `;
 
-  const groupedFiles = files.filter(file => file.group === group.groupName);
 
   function getHandleDragStart(file) {
     return function handleDragStart(e) {
       const dataTransfer = e.dataTransfer;
-      dataTransfer.setData("action", "move");
-      dataTransfer.setData("fileid", file.id);
+      dataTransfer.setData("Text", "move," + file.id);
+      // dataTransfer.setData("fileid", file.id);
       setDragging(true);
     };
   }
@@ -53,7 +53,7 @@ export default function Files({ setDragging, group }) {
   return (
     <div className={cx(styles, "files-container")}>
       <ul ref={ref}>
-        {groupedFiles.map(file => (
+        {files.map(file => (
           <li
             onDragStart={getHandleDragStart(file)}
             onDragEnd={handleDragEnd}
