@@ -1,4 +1,4 @@
-import React, {  useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { css, cx } from "emotion";
 import FileItem from "./file-item";
 import Viewer from "viewerjs";
@@ -7,9 +7,12 @@ import "viewerjs/dist/viewer.css";
 export default function Files({ setDragging, files }) {
   const ref = useRef();
   const styles = css`
+    min-height: 150px;
+    display: flex;
+    align-items: center;
     ul {
       margin: 0;
-      padding-left: 0;
+      padding-left: 6px;
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
@@ -19,11 +22,10 @@ export default function Files({ setDragging, files }) {
       margin-right: 6px;
       margin-top: 6px;
     }
-    .empty{
+    .empty {
       text-align: center;
     }
   `;
-
 
   function getHandleDragStart(file) {
     return function handleDragStart(e) {
@@ -40,9 +42,7 @@ export default function Files({ setDragging, files }) {
   useEffect(
     function() {
       const viewer = new Viewer(ref.current);
-      setTimeout(() => {
-        viewer.update();
-      }, 500);
+      viewer.update();
       return function() {
         viewer.destroy();
       };

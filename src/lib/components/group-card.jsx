@@ -1,17 +1,16 @@
 import React, { useState, useContext } from "react";
 import Files from "./files";
 import { css, cx } from "emotion";
-import { FilesContext, getId } from "./common";
-import Upload from "./upload";
+import { FilesContext, getId, addFilesLater } from "./common";
 
-export default function GroupCard({ group, onlyBody = false }) {
+export default function GroupCard({ group, groupCount, onlyBody = false }) {
   const { dispatch, files } = useContext(FilesContext);
   const [hover, setHover] = useState(false);
   const [dragging, setDragging] = useState(false);
   // const [error, setError] = useState(null);
   const groupedFiles = files.filter(file => file.group === group.groupName);
   let error = null;
-  if( group.validate) {
+  if (group.validate) {
     error = group.validate(groupedFiles);
     error = error === true ? null : error;
   }
@@ -28,12 +27,13 @@ export default function GroupCard({ group, onlyBody = false }) {
         file,
         group: group.groupName
       }));
-      dispatch({ type: "add-files", files: toAddFiles });
+      Promise.all(addFilesLater(toAddFiles)).then(resolveFiles => {
+        dispatch({ type: "add-files", files: resolveFiles });
+      });
       return;
     }
 
     if (action === "move") {
-      // const fileid = dataTransfer.getData("Text");
       dispatch({
         type: "move-file",
         fileid: fileid,
@@ -46,75 +46,70 @@ export default function GroupCard({ group, onlyBody = false }) {
     e.preventDefault();
   }
 
-  function handleDragEnter(e){
+  function handleDragEnter(e) {
     e.preventDefault();
   }
 
-  function handleFiles(files) {
-    const toAddFiles = Array.from(files).map(file => ({
-      id: getId(),
-      file,
-      group: group.groupName
-    }));
-    dispatch({ type: "add-files", files: toAddFiles });
-  }
-
   const styles = css`
-    /* border: 0.5px solid #223f7e; */
-    outline: ${hover ? "1px solid #223f7e" : "none"};
-    margin: 8px;
-    padding: 6px;
-    flex-grow: 1;
-    ${onlyBody ? 'height: 100%;': ''}
-    .group-card-name {
-      font-size: 18px;
-      height: 18px;
-      color: #333;
-    }
-    .group-card-desc {
-      font-size: 12px;
-      height: 12px;
-      color: #444;
-      padding: 6px 0;
-      margin-bottom: 6px;
-      ${error ? 'color: red;' : ''}
-    }
-    .group-card-head {
-      /* border-bottom: 1px solid #223f7e; */
-    }
-    
-    .group-card-body {
-      ${onlyBody ? 'height: calc(100% - 78px);' : ''}
-      border: 0.5px solid #223f7e; 
-      min-height: 120px;
-    }
-
-    .upload-btn {
-      cursor: pointer;
-    }
+     .req {
+       color: red;
+     }
+     .error-message {
+       height: 12px;
+       font-size: 10px;
+       text-align: left;
+       line-height: 12px;
+       color: red;
+       margin-left: 6px;
+     }
   `;
 
-  return (
-    <div
-      className={cx(styles, "group-card")}
+  return onlyBody ? (
+    <td
+      className={cx(styles, "group-card null-group-card")}
       onDrop={handleDrop}
       onDragOver={hanleDragOver}
       onDragEnter={handleDragEnter}
+      rowSpan={groupCount}
     >
-      {(
-        <div className={"group-card-head"}>
-          <div className={"group-card-name"}>{group.groupTitle || " " }</div>
-          <div className={"group-card-desc"}>{error || group.groupDesc || " "}</div>
+       <div className={'error-message'}>{error || ''}</div>
+      <Files
+        files={groupedFiles}
+        setDragging={setDragging}
+        dragging={dragging}
+        hover={hover}
+        setHover={setHover}
+        group={group}
+      />
+       <div className={'error-message'}>{''}</div>
+    </td>
+  ) : (
+    <>
+      <td
+        className={cx(styles, "group-card")}
+        onDrop={handleDrop}
+        onDragOver={hanleDragOver}
+        onDragEnter={handleDragEnter}
+      >
+        <div className={"group-card-name"}><span className="req">{group.required && "*"}</span>{group.groupTitle}</div>
+      </td>
+      <td
+        className={cx(styles, "group-card")}
+        onDrop={handleDrop}
+        onDragOver={hanleDragOver}
+        onDragEnter={handleDragEnter}
+      >
+        <div className={"group-card-desc"}>
+          {group.groupDesc}
         </div>
-      )}
-      <div className={"group-card-body"}>
-        <div className={"upload-btn-container"}>
-          {onlyBody && (
-            <Upload onFiles={handleFiles}>
-              <span className={"upload-btn"}>点击选择文件</span>
-            </Upload>
-          )}
-        </div>
+      </td>
+      <td
+        className={cx(styles, "group-card")}
+        onDrop={handleDrop}
+        onDragOver={hanleDragOver}
+        onDragEnter={handleDragEnter}
+      >
+        <div className={'error-message'}>{error || ''}</div>
         <Files
           files={groupedFiles}
           setDragging={setDragging}
@@ -123,7 +118,8 @@ export default function GroupCard({ group, onlyBody = false }) {
           setHover={setHover}
           group={group}
         />
-      </div>
-    </div>
+         <div className={'error-message'}>{''}</div>
+      </td>
+    </>
   );
 }

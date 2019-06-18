@@ -4,15 +4,7 @@ import { IoIosClose } from "react-icons/io";
 import { FilesContext } from "./common";
 export default function FileItem({ file: fileObj }) {
   const { dispatch } = useContext(FilesContext);
-  const [url, setUrl] = useState(null);
-  const { file, id } = fileObj;
-  useEffect(() => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = ev => {
-      setUrl(reader.result);
-    };
-  }, [file]);
+  const { id } = fileObj;
   function removeFile() {
     dispatch({ type: "remove-file", id });
   }
@@ -23,7 +15,7 @@ export default function FileItem({ file: fileObj }) {
       left: 100%;
       transform: translate(-50%, -50%);
       position: absolute;
-      font-size: 30px;
+      font-size: 24px;
       color: red;
       display: none;
       cursor: pointer;
@@ -35,7 +27,7 @@ export default function FileItem({ file: fileObj }) {
 
   return (
     <div className={cx(styles, "img-container")}>
-      {url ? <img src={url} width={80} height={120} /> : "loading"}
+      {<img src={fileObj.url} width={80} height={120} />}
       <span className="close-btn" onClick={removeFile}>
         <IoIosClose />
       </span>

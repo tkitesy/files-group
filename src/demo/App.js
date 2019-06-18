@@ -3,6 +3,7 @@ import Example from "../lib";
 
 const groups = [
   {
+    required: true, 
     groupName: "jpg",
     groupTitle: "jpg图片",
     groupDesc: "jpg files",
