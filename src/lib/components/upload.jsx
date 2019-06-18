@@ -7,7 +7,7 @@ var styles = {
   }
 };
 
-export default function Upload({ children, className, onFiles }) {
+export default function Upload({ children, accept = 'image/*', className, onFiles }) {
   const ref = useRef();
   function onChange(event) {
     const { target } = event;
@@ -33,6 +33,7 @@ export default function Upload({ children, className, onFiles }) {
         style={styles.input}
         value={""}
         type="file"
+        accept={accept}
         onChange={onChange}
         multiple
       />

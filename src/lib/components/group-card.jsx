@@ -66,7 +66,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
 
   return onlyBody ? (
     <td
-      className={cx(styles, "group-card null-group-card")}
+      className={cx(styles, "group-card null-group-card last-td")}
       onDrop={handleDrop}
       onDragOver={hanleDragOver}
       onDragEnter={handleDragEnter}
@@ -86,7 +86,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
   ) : (
     <>
       <td
-        className={cx(styles, "group-card")}
+        className={cx(styles, "group-card first-td")}
         onDrop={handleDrop}
         onDragOver={hanleDragOver}
         onDragEnter={handleDragEnter}

@@ -26,16 +26,26 @@ function reducer(state = [], action) {
 
 export default function FilesGroup({ groups, option = {} }) {
   const [files, dispatch] = useReducer(reducer, []);
+  const { borderStyle = "1px solid #555" } = option;
   const styles = css`
     display: flex;
-    border: 0.5px solid #223f7e;
     table {
       width: 100%;
       text-align: center;
       td,
       th {
-        border: 0.5px solid #223f7e;
+        border-right: ${borderStyle};
         font-weight: normal;
+        border-bottom: ${borderStyle};
+      }
+      td.first-td {
+        border-left: ${borderStyle};
+      }
+      th.first-th {
+        border-left:${borderStyle};
+      }
+      tr.first-tr th {
+        border-top: ${borderStyle};
       }
     }
     .upload-btn {
@@ -112,12 +122,12 @@ export default function FilesGroup({ groups, option = {} }) {
             <col width="35%" />
           </colgroup>
           <thead>
-            <tr>
-              <th key="group">要件类别</th>
+            <tr className="first-tr">
+              <th key="group" className="first-th">要件类别</th>
               <th key="desc">说明</th>
               <th key="drop">拖放选择</th>
               <th key="upload">
-                <Upload onFiles={handleFiles}>
+                <Upload onFiles={handleFiles} accept={option.accept}>
                   <span className={"upload-btn"}>点击上传</span>
                 </Upload>
               </th>

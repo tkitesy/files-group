@@ -3,7 +3,7 @@ import { css, cx } from "emotion";
 import { IoIosClose } from "react-icons/io";
 import { FilesContext } from "./common";
 export default function FileItem({ file: fileObj }) {
-  const { dispatch } = useContext(FilesContext);
+  const { dispatch, option } = useContext(FilesContext);
   const { id } = fileObj;
   function removeFile() {
     dispatch({ type: "remove-file", id });
@@ -27,7 +27,7 @@ export default function FileItem({ file: fileObj }) {
 
   return (
     <div className={cx(styles, "img-container")}>
-      {<img src={fileObj.url} width={80} height={120} />}
+      {<img src={fileObj.url} width={option.itemWidth || 80} height={option.itemHeight || 120} />}
       <span className="close-btn" onClick={removeFile}>
         <IoIosClose />
       </span>
