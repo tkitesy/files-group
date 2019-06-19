@@ -27,7 +27,7 @@ function reducer(state = [], action) {
   return state;
 }
 
-export default function FilesGroup({ groups, option = {}, initFiles =[] }) {
+export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
   
   const [files, dispatch] = useReducer(reducer, []);
   const { borderStyle = "1px solid #555" } = option;

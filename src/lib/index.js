@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 
 export default FilesGroup;
 
-window.renderFilesGroup = function(mountNode, groups = [], option = {}, initFiles) {
+window.renderFilesGroup = function(mountNode, groups = [], option = {}, initFiles = []) {
   let files = {};
   let errors = {};
   const onChange = function(fs, errs) {
