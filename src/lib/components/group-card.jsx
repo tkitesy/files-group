@@ -22,14 +22,14 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
       ? dataTransfer.getData("Text").split(",")
       : [];
     if (!action) {
-      const toAddFiles = Array.from(e.dataTransfer.files).map(file => ({
-        id: getId(),
-        file,
-        group: group.groupName
-      }));
-      Promise.all(addFilesLater(toAddFiles)).then(resolveFiles => {
-        dispatch({ type: "add-files", files: resolveFiles });
-      });
+      // const toAddFiles = Array.from(e.dataTransfer.files).map(file => ({
+      //   id: getId(),
+      //   file,
+      //   group: group.groupName
+      // }));
+      // Promise.all(addFilesLater(toAddFiles)).then(resolveFiles => {
+      //   dispatch({ type: "add-files", files: resolveFiles });
+      // });
       return;
     }
 
