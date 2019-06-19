@@ -20,13 +20,35 @@ function reducer(state = [], action) {
     case "remove-file":
       const { id } = action;
       return state.filter(file => file.id !== id);
+    case "reset-files":
+      const {files} = action;
+      return files.slice();
   }
   return state;
 }
 
-export default function FilesGroup({ groups, option = {} }) {
+export default function FilesGroup({ groups, option = {}, initFiles =[] }) {
+  
   const [files, dispatch] = useReducer(reducer, []);
   const { borderStyle = "1px solid #555" } = option;
+
+  useEffect(() => {
+    const files = initFiles.map(file => {
+      return {
+        group: file.groupName,
+        url: file.base64,
+        id: getId(),
+        file: {
+          size: file.size,
+          name: file.name,
+          type: file.type
+        }
+      }
+    })
+
+    dispatch({type: 'reset-files', files});
+  }, [initFiles]);
+
   const styles = css`
     display: flex;
     table {
@@ -72,6 +94,7 @@ export default function FilesGroup({ groups, option = {} }) {
   useEffect(() => {
     const { onChange } = option;
     const ret = {};
+    const nRet = [];
     files.forEach(file => {
       if (file.group === "null") {
         return;
@@ -79,6 +102,13 @@ export default function FilesGroup({ groups, option = {} }) {
       ret[file.group] = ret[file.group] || [];
       ret[file.group].push({
         file: file.file,
+        base64: file.url
+      });
+      nRet.push({
+        groupName: file.group,
+        size: file.file.size,
+        name: file.file.name,
+        type: file.file.type,
         base64: file.url
       });
     });
@@ -92,7 +122,7 @@ export default function FilesGroup({ groups, option = {} }) {
         }
       }
     });
-    onChange && onChange(ret, errs);
+    onChange && onChange(nRet, errs);
   }, [files, option, groups]);
 
   const nullGroup = (
@@ -116,19 +146,19 @@ export default function FilesGroup({ groups, option = {} }) {
       <div className={cx(styles, "files-group")}>
         <table cellSpacing="0">
           <colgroup>
-            <col width="10%" />
-            <col width="20%" />
-            <col width="35%" />
-            <col width="35%" />
+            <col width={option.groupWidth || "10%"} />
+            <col width={option.descWidth || "20%"} />
+            <col width={option.dropWidth || "35%"} />
+            <col width={option.uploadWidth || "35%"} />
           </colgroup>
           <thead>
             <tr className="first-tr">
-              <th key="group" className="first-th">要件类别</th>
-              <th key="desc">说明</th>
-              <th key="drop">拖放选择</th>
+              <th key="group" className="first-th">{option.groupLabel || '要件类别'}</th>
+              <th key="desc">{option.descLabel || '说明'}</th>
+              <th key="drop">{option.dropLabel || '拖放选择'}</th>
               <th key="upload">
                 <Upload onFiles={handleFiles} accept={option.accept}>
-                  <span className={"upload-btn"}>点击上传</span>
+                  <span className={"upload-btn"}>{option.uploadLabel || '点击上传'}</span>
                 </Upload>
               </th>
             </tr>

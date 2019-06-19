@@ -5,12 +5,12 @@ import ReactDOM from "react-dom";
 
 export default FilesGroup;
 
-window.renderFilesGroup = function(mountNode, groups = [], option = {}) {
+window.renderFilesGroup = function(mountNode, groups = [], option = {}, initFiles) {
   let files = {};
   let errors = {};
   const onChange = function(fs, errs) {
     try {
-      option.onChange && option.onChange();
+      option.onChange && option.onChange(fs, errs);
     } finally {
       files = fs;
       errors = errs;
@@ -23,7 +23,7 @@ window.renderFilesGroup = function(mountNode, groups = [], option = {}) {
     return errors;
   }
   ReactDOM.render(
-    <FilesGroup groups={groups} option={{ ...option, onChange }} />,
+    <FilesGroup groups={groups} option={{ ...option, onChange }} initFiles={initFiles} />,
     mountNode
   );
   return {
