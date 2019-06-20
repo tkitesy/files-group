@@ -4,7 +4,7 @@ export const FilesContext = React.createContext({});
 let id = 0;
 
 export function getId() {
-  return "" + id++;
+  return "files-group-img-" + id++;
 }
 
 export function addFilesLater(files) {
@@ -16,7 +16,7 @@ export function addFilesLater(files) {
       reader.onload = ev => {
         resolve({
             ...fileObj,
-            url: reader.result
+            base64: reader.result
         });
       };
     });

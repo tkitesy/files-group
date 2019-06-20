@@ -1,10 +1,13 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import { css, cx } from "emotion";
 import FileItem from "./file-item";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
+import { FilesContext } from "./common";
 
 export default function Files({ setDragging, files }) {
+  const { option } = useContext(FilesContext);
+  const editable = option.editable !== false;
   const ref = useRef();
   const styles = css`
     min-height: 150px;
@@ -30,6 +33,7 @@ export default function Files({ setDragging, files }) {
   function getHandleDragStart(file) {
     return function handleDragStart(e) {
       const dataTransfer = e.dataTransfer;
+      dataTransfer.setDragImage && dataTransfer.setDragImage(document.getElementById(file.id), 0, 0);
       dataTransfer.setData("Text", "move," + file.id);
       // dataTransfer.setData("fileid", file.id);
       setDragging(true);
@@ -54,11 +58,19 @@ export default function Files({ setDragging, files }) {
     <div className={cx(styles, "files-container")}>
       <ul ref={ref}>
         {files.map(file => (
+          editable ? 
           <li
             onDragStart={getHandleDragStart(file)}
             onDragEnd={handleDragEnd}
             draggable
             key={file.id}
+          >
+            <FileItem file={file} />
+          </li>
+          : 
+          <li
+            key={file.id}
+            draggable={false}
           >
             <FileItem file={file} />
           </li>

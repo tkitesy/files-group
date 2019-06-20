@@ -21,32 +21,36 @@ function reducer(state = [], action) {
       const { id } = action;
       return state.filter(file => file.id !== id);
     case "reset-files":
-      const {files} = action;
+      const { files } = action;
       return files.slice();
   }
   return state;
 }
 
 export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
-  
   const [files, dispatch] = useReducer(reducer, []);
   const { borderStyle = "1px solid #555" } = option;
+  const editable = option.editable !== false;
+
+  useEffect(() => {
+    option.onReady && option.onReady(dispatch);
+  }, []);
 
   useEffect(() => {
     const files = initFiles.map(file => {
       return {
         group: file.groupName,
-        url: file.base64,
-        id: getId(),
+        base64: file.base64,
+        id: file.id || getId(),
         file: {
           size: file.size,
           name: file.name,
           type: file.type
         }
-      }
-    })
+      };
+    });
 
-    dispatch({type: 'reset-files', files});
+    dispatch({ type: "add-files", files });
   }, [initFiles]);
 
   const styles = css`
@@ -64,7 +68,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
         border-left: ${borderStyle};
       }
       th.first-th {
-        border-left:${borderStyle};
+        border-left: ${borderStyle};
       }
       tr.first-tr th {
         border-top: ${borderStyle};
@@ -72,11 +76,14 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
     }
     .upload-btn {
       cursor: pointer;
-
     }
     .upload-btn:hover {
       color: blue;
       text-decoration: underline;
+    }
+    .upload-desc {
+      color: #bbb;
+      font-size: 8px;
     }
   `;
 
@@ -102,14 +109,16 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
       ret[file.group] = ret[file.group] || [];
       ret[file.group].push({
         file: file.file,
-        base64: file.url
+        base64: file.base64,
+        url: file.url
       });
       nRet.push({
         groupName: file.group,
         size: file.file.size,
         name: file.file.name,
         type: file.file.type,
-        base64: file.url
+        base64: file.base64,
+        url: file.url
       });
     });
     const errs = {};
@@ -137,9 +146,19 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
   const groupElements = groups.map((group, i) => (
     <>
       <GroupCard key={group.groupName} group={group} />
-      {i === 0 && nullGroup}
+      {editable && i === 0 && nullGroup}
     </>
   ));
+
+  function handleUploadDescClick(e){
+    e.stopPropagation();
+    option.onUploadDescClick && option.onUploadDescClick(e);
+  }
+
+  function handleUploadAddonClick(e){
+    e.stopPropagation();
+    option.onUploadAddonClick && option.onUploadAddonClick(e);
+  }
 
   return (
     <FilesContext.Provider value={{ dispatch, files, option }}>
@@ -148,19 +167,36 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
           <colgroup>
             <col width={option.groupWidth || "10%"} />
             <col width={option.descWidth || "20%"} />
-            <col width={option.dropWidth || "35%"} />
-            <col width={option.uploadWidth || "35%"} />
+            <col width={editable ? option.dropWidth || "35%" : ""} />
+            {editable && <col width={option.uploadWidth || "35%"} />}
           </colgroup>
           <thead>
             <tr className="first-tr">
-              <th key="group" className="first-th">{option.groupLabel || '要件类别'}</th>
-              <th key="desc">{option.descLabel || '说明'}</th>
-              <th key="drop">{option.dropLabel || '拖放选择'}</th>
-              <th key="upload">
-                <Upload onFiles={handleFiles} accept={option.accept}>
-                  <span className={"upload-btn"}>{option.uploadLabel || '点击上传'}</span>
-                </Upload>
+              <th key="group" className="first-th">
+                {option.groupLabel || "要件类别"}
               </th>
+              <th key="desc">{option.descLabel || "说明"}</th>
+              <th key="drop">{option.dropLabel || "拖放选择"}</th>
+              {editable && (
+                <th key="upload">
+                  <Upload onFiles={handleFiles} accept={option.accept}>
+                    <span className={"upload-btn"}>
+                      {option.uploadLabel || "选择图片"}
+                    </span>
+                    <span onClick={handleUploadDescClick} className={"upload-desc"}>
+                      {option.uploadDesc || "按住Ctrl可多选"}
+                    </span>
+                    {option.uploadAddon && (
+                      <span
+                        className={"upload-addon"}
+                        onClick={handleUploadAddonClick}
+                      >
+                        {option.uploadAddon}
+                      </span>
+                    )}
+                  </Upload>
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>

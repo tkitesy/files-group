@@ -24,9 +24,14 @@ const App = () => (
     <Example
       groups={groups}
       option={{
+        editable: true,
         onChange: (files, errors) => {
           console.log(files);
           console.log(errors);
+        },
+        uploadAddon: '拍照',
+        onUploadAddonClick: function() {
+          console.log("onUploadAddonClick")
         }
       }}
       initFiles={initFiles}

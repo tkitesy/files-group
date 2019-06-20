@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import Files from "./files";
 import { css, cx } from "emotion";
-import { FilesContext, getId, addFilesLater } from "./common";
+import { FilesContext } from "./common";
 
 export default function GroupCard({ group, groupCount, onlyBody = false }) {
-  const { dispatch, files } = useContext(FilesContext);
+  const { dispatch, files, option } = useContext(FilesContext);
+  const editable = option.editable !== false;
   const [hover, setHover] = useState(false);
   const [dragging, setDragging] = useState(false);
   // const [error, setError] = useState(null);
@@ -43,7 +44,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
   }
 
   function hanleDragOver(e) {
-    e.preventDefault();
+    editable && e.preventDefault();
   }
 
   function handleDragEnter(e) {
@@ -51,17 +52,17 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
   }
 
   const styles = css`
-     .req {
-       color: red;
-     }
-     .error-message {
-       height: 12px;
-       font-size: 10px;
-       text-align: left;
-       line-height: 12px;
-       color: red;
-       margin-left: 6px;
-     }
+    .req {
+      color: red;
+    }
+    .error-message {
+      height: 12px;
+      font-size: 10px;
+      text-align: left;
+      line-height: 12px;
+      color: red;
+      margin-left: 6px;
+    }
   `;
 
   return onlyBody ? (
@@ -72,7 +73,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
       onDragEnter={handleDragEnter}
       rowSpan={groupCount}
     >
-       <div className={'error-message'}>{error || ''}</div>
+      <div className={"error-message"}>{error || ""}</div>
       <Files
         files={groupedFiles}
         setDragging={setDragging}
@@ -81,7 +82,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
         setHover={setHover}
         group={group}
       />
-       <div className={'error-message'}>{''}</div>
+      <div className={"error-message"}>{""}</div>
     </td>
   ) : (
     <>
@@ -91,16 +92,9 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
         onDragOver={hanleDragOver}
         onDragEnter={handleDragEnter}
       >
-        <div className={"group-card-name"}><span className="req">{group.required && "*"}</span>{group.groupTitle}</div>
-      </td>
-      <td
-        className={cx(styles, "group-card")}
-        onDrop={handleDrop}
-        onDragOver={hanleDragOver}
-        onDragEnter={handleDragEnter}
-      >
-        <div className={"group-card-desc"}>
-          {group.groupDesc}
+        <div className={"group-card-name"}>
+          <span className="req">{group.required && "*"}</span>
+          {group.groupTitle}
         </div>
       </td>
       <td
@@ -109,7 +103,15 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
         onDragOver={hanleDragOver}
         onDragEnter={handleDragEnter}
       >
-        <div className={'error-message'}>{error || ''}</div>
+        <div className={"group-card-desc"}>{group.groupDesc}</div>
+      </td>
+      <td
+        className={cx(styles, "group-card")}
+        onDrop={handleDrop}
+        onDragOver={hanleDragOver}
+        onDragEnter={handleDragEnter}
+      >
+        <div className={"error-message"}>{error || ""}</div>
         <Files
           files={groupedFiles}
           setDragging={setDragging}
@@ -118,7 +120,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
           setHover={setHover}
           group={group}
         />
-         <div className={'error-message'}>{''}</div>
+        <div className={"error-message"}>{""}</div>
       </td>
     </>
   );

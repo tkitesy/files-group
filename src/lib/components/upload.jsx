@@ -1,13 +1,12 @@
 import React, { useRef } from "react";
+import { css, cx } from "emotion";
 
-var styles = {
-  input: {
-   width: 0,
-   height: 0,
-  }
-};
-
-export default function Upload({ children, accept = 'image/*', className, onFiles }) {
+export default function Upload({
+  children,
+  accept = "image/*",
+  className,
+  onFiles
+}) {
   const ref = useRef();
   function onChange(event) {
     const { target } = event;
@@ -19,18 +18,26 @@ export default function Upload({ children, accept = 'image/*', className, onFile
     let event;
     try {
       event = new MouseEvent("click");
-    }catch(e){
+    } catch (e) {
       event = document.createEvent("HTMLEvents");
       event.initEvent("click", false, true);
     }
     ref.current && ref.current.dispatchEvent(event);
   }
+
+  const styles = css`
+    display: inline;
+    input {
+      width: 0;
+      height: 0;
+    }
+  `;
+
   return (
-    <div onClick={onClick}>
+    <div onClick={onClick} className={cx(styles, "upload-container", className)}>
       {children}
       <input
         ref={ref}
-        style={styles.input}
         value={""}
         type="file"
         accept={accept}
