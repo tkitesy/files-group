@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import Files from "./files";
 import { css, cx } from "emotion";
-import { FilesContext } from "./common";
+import { FilesContext, getTransfer } from "./common";
 
 export default function GroupCard({ group, groupCount, onlyBody = false }) {
   const { dispatch, files, option } = useContext(FilesContext);
@@ -18,10 +18,9 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
 
   function handleDrop(e) {
     e.preventDefault();
-    const dataTransfer = e.dataTransfer;
-    const [action, fileid] = dataTransfer.getData("Text")
-      ? dataTransfer.getData("Text").split(",")
-      : [];
+    e.stopPropagation();
+    // const dataTransfer = e.dataTransfer;
+    const [action, fileid] = getTransfer(); 
     if (!action) {
       // const toAddFiles = Array.from(e.dataTransfer.files).map(file => ({
       //   id: getId(),
@@ -62,6 +61,9 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
       line-height: 12px;
       color: red;
       margin-left: 6px;
+    }
+    &.null-group-card {
+      vertical-align: top;
     }
   `;
 

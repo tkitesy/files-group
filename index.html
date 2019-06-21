@@ -83,7 +83,11 @@
           console.log(files);
           console.log(errors);
         },
-        editable: true
+        editable: true,
+        groupWidth: 100,
+        descWidth: 100,
+        dropWidth: 300,
+        uploadWidth: 300,
       };
 
       var ret = renderFilesGroup(document.getElementById("root"), groups, option);

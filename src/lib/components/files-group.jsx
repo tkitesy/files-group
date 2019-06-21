@@ -58,6 +58,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
     table {
       width: 100%;
       text-align: center;
+      table-layout: fixed;
       td,
       th {
         border-right: ${borderStyle};
@@ -110,7 +111,8 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
       ret[file.group].push({
         file: file.file,
         base64: file.base64,
-        url: file.url
+        url: file.url,
+        id: file.id
       });
       nRet.push({
         groupName: file.group,
@@ -118,7 +120,8 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
         name: file.file.name,
         type: file.file.type,
         base64: file.base64,
-        url: file.url
+        url: file.url,
+        id: file.id
       });
     });
     const errs = {};

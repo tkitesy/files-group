@@ -3,7 +3,7 @@ import { css, cx } from "emotion";
 import FileItem from "./file-item";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
-import { FilesContext } from "./common";
+import { FilesContext, setTransfer } from "./common";
 
 export default function Files({ setDragging, files }) {
   const { option } = useContext(FilesContext);
@@ -33,9 +33,8 @@ export default function Files({ setDragging, files }) {
   function getHandleDragStart(file) {
     return function handleDragStart(e) {
       const dataTransfer = e.dataTransfer;
-      dataTransfer.setDragImage && dataTransfer.setDragImage(document.getElementById(file.id), 0, 0);
-      dataTransfer.setData("Text", "move," + file.id);
-      // dataTransfer.setData("fileid", file.id);
+      dataTransfer.setData("Text", "");
+      setTransfer(["move", file.id])
       setDragging(true);
     };
   }

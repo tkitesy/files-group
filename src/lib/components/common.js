@@ -1,10 +1,19 @@
 import React from "react";
-import { resolve } from "q";
+import uuid from "uuid/v1"
 export const FilesContext = React.createContext({});
 let id = 0;
 
+let transfer = [];
+
+export function setTransfer(data) {
+  transfer = data;
+}
+export function getTransfer() {
+  return transfer;
+}
+
 export function getId() {
-  return "files-group-img-" + id++;
+  return uuid();
 }
 
 export function addFilesLater(files) {
@@ -15,8 +24,8 @@ export function addFilesLater(files) {
       reader.readAsDataURL(file);
       reader.onload = ev => {
         resolve({
-            ...fileObj,
-            base64: reader.result
+          ...fileObj,
+          base64: reader.result
         });
       };
     });

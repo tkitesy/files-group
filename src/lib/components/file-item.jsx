@@ -30,9 +30,9 @@ export default function FileItem({ file: fileObj }) {
     }
     .close-btn {
       bottom: 0;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      position: absolute;
+      /* left: 50%; */
+      /* transform: translate(-50%, -50%);
+      position: absolute; */
       font-size: 12px;
       color: #ddd;
       display: none;
@@ -41,15 +41,18 @@ export default function FileItem({ file: fileObj }) {
     &:hover .close-btn {
       display: inline-block;
     }
+    .close-btn:hover {
+      color: skyblue;
+    }
     &:hover .img-mask {
       display: block;
     }
     .img-mask {
       position: absolute;
-      top: 0;
+      bottom: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      /* height: 36px; */
       /* transition: height 0.5s; */
       background-color: rgba(0, 0, 0, 0.8);
       display: none;
@@ -59,11 +62,16 @@ export default function FileItem({ file: fileObj }) {
     ref.current.click();
   }
 
+  function preventEvent(e){
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
   return (
     <div className={cx(styles, "img-container")}>
       {<img id={id} ref={ref} src={fileObj.url || fileObj.base64} />}
       {editable && (
-        <div className="img-mask" onClick={dispatchClick}>
+        <div className="img-mask" onClick={dispatchClick} onClick={preventEvent}>
           <span className="close-btn" onClick={removeFile} title="删除">
             <RemoveIcon />
           </span>
