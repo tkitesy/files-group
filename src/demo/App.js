@@ -11,6 +11,16 @@ const groups = [
       if (files.length === 0) {
         return "至少包含一个文件";
       }
+      let flag = false;
+      files.forEach(file => {
+        if(file.file.size > 50 * 1024 ) {
+          flag = true;
+          document.getElementById(`img-container-${file.id}`).style.borderColor = "red"
+        }
+      })
+      if(flag) {
+        return "文件大小必须小于500k"
+      }
       return true;
     }
   },

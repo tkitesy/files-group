@@ -108,12 +108,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
         return;
       }
       ret[file.group] = ret[file.group] || [];
-      ret[file.group].push({
-        file: file.file,
-        base64: file.base64,
-        url: file.url,
-        id: file.id
-      });
+      ret[file.group].push(file);
       nRet.push({
         groupName: file.group,
         size: file.file.size,

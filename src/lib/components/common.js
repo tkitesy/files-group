@@ -1,5 +1,5 @@
 import React from "react";
-import uuid from "uuid/v1"
+import uuid from "uuid/v4"
 export const FilesContext = React.createContext({});
 let id = 0;
 

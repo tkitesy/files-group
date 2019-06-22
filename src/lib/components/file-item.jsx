@@ -68,8 +68,8 @@ export default function FileItem({ file: fileObj }) {
   }
 
   return (
-    <div className={cx(styles, "img-container")}>
-      {<img id={id} ref={ref} src={fileObj.url || fileObj.base64} />}
+    <div className={cx(styles, "img-container")} id={`img-container-${id}`}>
+      {<img id={`img-${id}`} ref={ref} src={fileObj.url || fileObj.base64} />}
       {editable && (
         <div className="img-mask" onClick={dispatchClick} onClick={preventEvent}>
           <span className="close-btn" onClick={removeFile} title="删除">
