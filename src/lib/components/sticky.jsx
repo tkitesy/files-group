@@ -35,14 +35,15 @@ export function Sticky({ children, className }) {
       setTopOffset(topDiff);
     }
   }, []);
-  const offset = Math.max(scroll - topOffset, 0);
+  const offset = Math.max((scroll || 0 ) - topOffset , 0);
   const styles = css`
     height: auto;
     position: relative;
-    & > * {
+    & > ul {
         position: absolute;
       /* transform: translateY(${offset}px); */
-      left: 0;
+      left: 0px;
+      /* margin-top: ${ offset }px; */
       top: ${ offset }px;
     }
   `;
