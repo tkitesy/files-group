@@ -64,6 +64,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
     }
     &.null-group-card {
       vertical-align: top;
+      overflow-y: auto;
     }
   `;
 
@@ -77,6 +78,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
     >
       <div className={"error-message"}>{error || ""}</div>
       <Files
+        needSticky={true}
         files={groupedFiles}
         setDragging={setDragging}
         dragging={dragging}

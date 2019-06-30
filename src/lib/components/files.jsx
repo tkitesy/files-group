@@ -4,8 +4,9 @@ import FileItem from "./file-item";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
 import { FilesContext, setTransfer } from "./common";
+import { Sticky } from "./sticky";
 
-export default function Files({ setDragging, files }) {
+export default function Files({ setDragging, files, needSticky = false }) {
   const { option } = useContext(FilesContext);
   const editable = option.editable !== false;
   const ref = useRef();
@@ -34,7 +35,7 @@ export default function Files({ setDragging, files }) {
     return function handleDragStart(e) {
       const dataTransfer = e.dataTransfer;
       dataTransfer.setData("Text", "");
-      setTransfer(["move", file.id])
+      setTransfer(["move", file.id]);
       setDragging(true);
     };
   }
@@ -53,11 +54,10 @@ export default function Files({ setDragging, files }) {
     [files]
   );
 
-  return (
-    <div className={cx(styles, "files-container")}>
-      <ul ref={ref}>
-        {files.map(file => (
-          editable ? 
+  const elements = (
+    <ul ref={ref}>
+      {files.map(file =>
+        editable ? (
           <li
             onDragStart={getHandleDragStart(file)}
             onDragEnd={handleDragEnd}
@@ -66,15 +66,18 @@ export default function Files({ setDragging, files }) {
           >
             <FileItem file={file} />
           </li>
-          : 
-          <li
-            key={file.id}
-            draggable={false}
-          >
+        ) : (
+          <li key={file.id} draggable={false}>
             <FileItem file={file} />
           </li>
-        ))}
-      </ul>
-    </div>
+        )
+      )}
+    </ul>
+  );
+
+  return needSticky ? (
+    <Sticky className={cx(styles, "files-container")}>{elements}</Sticky>
+  ) : (
+    <div className={cx(styles, "files-container")}>{elements}</div>
   );
 }

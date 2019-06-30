@@ -3,6 +3,7 @@ import GroupCard from "./group-card";
 import { css, cx } from "emotion";
 import { FilesContext, getId, addFilesLater } from "./common";
 import Upload from "./upload";
+import {StickyContainer} from './sticky'
 
 function reducer(state = [], action) {
   switch (action.type) {
@@ -55,6 +56,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
 
   const styles = css`
     display: flex;
+    height: 100%;
     table {
       width: 100%;
       text-align: center;
@@ -148,12 +150,12 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
     </>
   ));
 
-  function handleUploadDescClick(e){
+  function handleUploadDescClick(e) {
     e.stopPropagation();
     option.onUploadDescClick && option.onUploadDescClick(e);
   }
 
-  function handleUploadAddonClick(e){
+  function handleUploadAddonClick(e) {
     e.stopPropagation();
     option.onUploadAddonClick && option.onUploadAddonClick(e);
   }
@@ -161,48 +163,53 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
   return (
     <FilesContext.Provider value={{ dispatch, files, option }}>
       <div className={cx(styles, "files-group")}>
-        <table cellSpacing="0">
-          <colgroup>
-            <col width={option.groupWidth || "10%"} />
-            <col width={option.descWidth || "20%"} />
-            <col width={editable ? option.dropWidth || "35%" : ""} />
-            {editable && <col width={option.uploadWidth || "35%"} />}
-          </colgroup>
-          <thead>
-            <tr className="first-tr">
-              <th key="group" className="first-th">
-                {option.groupLabel || "要件类别"}
-              </th>
-              <th key="desc">{option.descLabel || "说明"}</th>
-              <th key="drop">{option.dropLabel || "拖放选择"}</th>
-              {editable && (
-                <th key="upload">
-                  <Upload onFiles={handleFiles} accept={option.accept}>
-                    <span className={"upload-btn"}>
-                      {option.uploadLabel || "选择图片"}
-                    </span>
-                    <span onClick={handleUploadDescClick} className={"upload-desc"}>
-                      {option.uploadDesc || "按住Ctrl可多选"}
-                    </span>
-                    {option.uploadAddon && (
-                      <span
-                        className={"upload-addon"}
-                        onClick={handleUploadAddonClick}
-                      >
-                        {option.uploadAddon}
-                      </span>
-                    )}
-                  </Upload>
+       <StickyContainer>
+          <table cellSpacing="0">
+            <colgroup>
+              <col width={option.groupWidth || "10%"} />
+              <col width={option.descWidth || "20%"} />
+              <col width={editable ? option.dropWidth || "35%" : ""} />
+              {editable && <col width={option.uploadWidth || "35%"} />}
+            </colgroup>
+            <thead>
+              <tr className="first-tr">
+                <th key="group" className="first-th">
+                  {option.groupLabel || "要件类别"}
                 </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {groupElements.map((group, i) => (
-              <tr key={i}>{group}</tr>
-            ))}
-          </tbody>
-        </table>
+                <th key="desc">{option.descLabel || "说明"}</th>
+                <th key="drop">{option.dropLabel || "拖放选择"}</th>
+                {editable && (
+                  <th key="upload">
+                    <Upload onFiles={handleFiles} accept={option.accept}>
+                      <span className={"upload-btn"}>
+                        {option.uploadLabel || "选择图片"}
+                      </span>
+                      <span
+                        onClick={handleUploadDescClick}
+                        className={"upload-desc"}
+                      >
+                        {option.uploadDesc || "按住Ctrl可多选"}
+                      </span>
+                      {option.uploadAddon && (
+                        <span
+                          className={"upload-addon"}
+                          onClick={handleUploadAddonClick}
+                        >
+                          {option.uploadAddon}
+                        </span>
+                      )}
+                    </Upload>
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {groupElements.map((group, i) => (
+                <tr key={i}>{group}</tr>
+              ))}
+            </tbody>
+          </table>
+          </StickyContainer>
       </div>
     </FilesContext.Provider>
   );
