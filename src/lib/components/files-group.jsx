@@ -24,6 +24,10 @@ function reducer(state = [], action) {
     case "reset-files":
       const { files } = action;
       return files.slice();
+    case "remove-all-null":
+      return state.filter(file => file.group !== 'null')
+    default :
+      return files;
   }
   return state;
 }
@@ -160,6 +164,11 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
     option.onUploadAddonClick && option.onUploadAddonClick(e);
   }
 
+  function handleRemoveAll(e) {
+    e.stopPropagation();
+   dispatch({type: 'remove-all-null'}); 
+  }
+
   return (
     <FilesContext.Provider value={{ dispatch, files, option }}>
       <div className={cx(styles, "files-group")}>
@@ -190,6 +199,14 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
                       >
                         {option.uploadDesc || "按住Ctrl可多选"}
                       </span>
+                      {option.needRemoveAll && (
+                        <span
+                        className={"remove-all-btn"}
+                        onClick={handleRemoveAll}
+                      >
+                        {option.removeAll || '清除全部'}
+                      </span>
+                      )}
                       {option.uploadAddon && (
                         <span
                           className={"upload-addon"}

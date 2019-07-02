@@ -90,6 +90,7 @@ const App = () => (
       <Example
         groups={groups}
         option={{
+          needRemoveAll: true,
           editable: true,
           onChange: (files, errors) => {
             console.log(files);
