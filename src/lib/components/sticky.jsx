@@ -40,7 +40,7 @@ export function Sticky({ children, className }) {
     height: auto;
     position: relative;
     & > ul {
-        position: absolute;
+     ${ offset > 5 ? 'position: absolute;' : ''}
       /* transform: translateY(${offset}px); */
       left: 0px;
       /* margin-top: ${ offset }px; */

@@ -27,8 +27,8 @@ const groups = [
     }
   },
   { groupName: "png", groupTitle: "png图片", groupDesc: "png files" },
-  { groupName: "gif", groupTitle: "gif图片", groupDesc: "gif files" },
-  { groupName: "mp4", groupTitle: "mp4图片", groupDesc: "mp4 files" }
+  // { groupName: "gif", groupTitle: "gif图片", groupDesc: "gif files" },
+  // { groupName: "mp4", groupTitle: "mp4图片", groupDesc: "mp4 files" }
 ];
 
 const initFiles = [
