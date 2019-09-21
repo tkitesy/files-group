@@ -1,5 +1,5 @@
 import React from "react";
-import Example from "../lib";
+import { FilesGroup, SimpleUpload } from "../lib";
 
 const groups = [
   {
@@ -27,8 +27,8 @@ const groups = [
     }
   },
   { groupName: "png", groupTitle: "png图片", groupDesc: "png files" },
-  // { groupName: "gif", groupTitle: "gif图片", groupDesc: "gif files" },
-  // { groupName: "mp4", groupTitle: "mp4图片", groupDesc: "mp4 files" }
+  { groupName: "gif", groupTitle: "gif图片", groupDesc: "gif files" },
+  { groupName: "mp4", groupTitle: "mp4图片", groupDesc: "mp4 files" }
 ];
 
 const initFiles = [
@@ -87,7 +87,7 @@ const App = () => (
     <h1>hq</h1>
     <h1>hq</h1>
     <div style={{ height: 500 }}>
-      <Example
+      <FilesGroup
         groups={groups}
         option={{
           needRemoveAll: true,
@@ -105,6 +105,17 @@ const App = () => (
       />
     </div>
     <h1>hq</h1>
+    <SimpleUpload
+      option={{
+        needRemoveAll: true,
+        editable: true,
+        onChange: (files, errors) => {
+          console.log(files);
+          console.log(errors);
+        }
+      }}
+      initFiles={initFiles}
+    />
     <h1>hq</h1>
   </div>
 );

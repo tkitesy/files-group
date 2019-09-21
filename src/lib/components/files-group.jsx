@@ -3,7 +3,7 @@ import GroupCard from "./group-card";
 import { css, cx } from "emotion";
 import { FilesContext, getId, addFilesLater } from "./common";
 import Upload from "./upload";
-import {StickyContainer} from './sticky'
+import { StickyContainer } from "./sticky";
 
 function reducer(state = [], action) {
   switch (action.type) {
@@ -25,11 +25,10 @@ function reducer(state = [], action) {
       const { files } = action;
       return files.slice();
     case "remove-all-null":
-      return state.filter(file => file.group !== 'null')
-    default :
+      return state.filter(file => file.group !== "null");
+    default:
       return files;
   }
-  return state;
 }
 
 export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
@@ -61,6 +60,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
   const styles = css`
     display: flex;
     height: 100%;
+    position: relative;
     table {
       width: 100%;
       text-align: center;
@@ -166,13 +166,13 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
 
   function handleRemoveAll(e) {
     e.stopPropagation();
-   dispatch({type: 'remove-all-null'}); 
+    dispatch({ type: "remove-all-null" });
   }
 
   return (
     <FilesContext.Provider value={{ dispatch, files, option }}>
       <div className={cx(styles, "files-group")}>
-       <StickyContainer>
+        <StickyContainer>
           <table cellSpacing="0">
             <colgroup>
               <col width={option.groupWidth || "10%"} />
@@ -201,11 +201,11 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
                       </span>
                       {option.needRemoveAll && (
                         <span
-                        className={"remove-all-btn"}
-                        onClick={handleRemoveAll}
-                      >
-                        {option.removeAll || '清除全部'}
-                      </span>
+                          className={"remove-all-btn"}
+                          onClick={handleRemoveAll}
+                        >
+                          {option.removeAll || "清除全部"}
+                        </span>
                       )}
                       {option.uploadAddon && (
                         <span
@@ -226,7 +226,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
               ))}
             </tbody>
           </table>
-          </StickyContainer>
+        </StickyContainer>
       </div>
     </FilesContext.Provider>
   );

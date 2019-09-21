@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useContext } from "react";
 import { css, cx } from "emotion";
 import FileItem from "./file-item";
 import Viewer from "viewerjs";
-import "viewerjs/dist/viewer.css";
 import { FilesContext, setTransfer } from "./common";
 import { Sticky } from "./sticky";
 
