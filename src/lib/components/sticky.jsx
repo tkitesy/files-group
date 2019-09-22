@@ -38,13 +38,13 @@ export function Sticky({ children, className }) {
   const offset = Math.max((scroll || 0 ) - topOffset , 0);
   const styles = css`
     height: auto;
-    position: relative;
     & > ul {
-     ${ offset > 5 ? 'position: absolute;' : ''}
+     /* ${ offset > 5 ? 'position: absolute;' : ''} */
       /* transform: translateY(${offset}px); */
       left: 0px;
-      /* margin-top: ${ offset }px; */
-      top: ${ offset }px;
+      margin-top: ${ offset }px;
+      margin-bottom :${ -offset }px;
+      /* top: ${ offset }px; */
     }
   `;
 
