@@ -93,7 +93,7 @@ export default function SimpleUpload({ initFiles, option }) {
         id: file.id
       });
     });
-    const errs = null;
+    let errs = null;
     const validate = option.validate || (() => true);
     const es = validate(files);
     if (es !== true) {
