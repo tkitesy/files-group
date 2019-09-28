@@ -4,8 +4,9 @@ import { css, cx } from "emotion";
 import { FilesContext, getId, addFilesLater } from "./common";
 import Upload from "./upload";
 import { StickyContainer } from "./sticky";
-import Backend from "react-dnd-html5-backend";
+import Backend from "react-dnd-touch-backend";
 import { DndProvider } from "react-dnd";
+import {FilePreview} from './file-preview'
 
 function reducer(state = [], action) {
   switch (action.type) {
@@ -173,8 +174,9 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
   }
 
   return (
-    <DndProvider backend={Backend}>
+    <DndProvider backend={Backend} options={{enableMouseEvents: true}}>
       <FilesContext.Provider value={{ dispatch, files, option }}>
+        <FilePreview />
         <div className={cx(styles, "files-group")}>
           <StickyContainer>
             <table cellSpacing="0">

@@ -10,7 +10,8 @@ function DraggableFile({ file }) {
   const [{dragging}, drag] = useDrag({
     item: { file, type: "move" },
     collect: monitor => ({
-      dragging: monitor.isDragging()
+      dragging: monitor.isDragging(),
+      
     })
   });
   return (
