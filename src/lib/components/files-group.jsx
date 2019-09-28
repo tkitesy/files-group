@@ -4,6 +4,8 @@ import { css, cx } from "emotion";
 import { FilesContext, getId, addFilesLater } from "./common";
 import Upload from "./upload";
 import { StickyContainer } from "./sticky";
+import Backend from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
 
 function reducer(state = [], action) {
   switch (action.type) {
@@ -38,7 +40,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
 
   useEffect(() => {
     option.onReady && option.onReady(dispatch);
-  }, []);
+  }, [option]);
 
   useEffect(() => {
     const files = initFiles.map(file => {
@@ -61,6 +63,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
     display: flex;
     height: 100%;
     position: relative;
+    user-select: none;
     table {
       width: 100%;
       text-align: center;
@@ -170,64 +173,66 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
   }
 
   return (
-    <FilesContext.Provider value={{ dispatch, files, option }}>
-      <div className={cx(styles, "files-group")}>
-        <StickyContainer>
-          <table cellSpacing="0">
-            <colgroup>
-              <col width={option.groupWidth || "10%"} />
-              <col width={option.descWidth || "20%"} />
-              <col width={editable ? option.dropWidth || "35%" : ""} />
-              {editable && <col width={option.uploadWidth || "35%"} />}
-            </colgroup>
-            <thead>
-              <tr className="first-tr">
-                <th key="group" className="first-th">
-                  {option.groupLabel || "要件类别"}
-                </th>
-                <th key="desc">{option.descLabel || "说明"}</th>
-                <th key="drop">{option.dropLabel || "拖放选择"}</th>
-                {editable && (
-                  <th key="upload">
-                    <Upload onFiles={handleFiles} accept={option.accept}>
-                      <span className={"upload-btn"}>
-                        {option.uploadLabel || "选择图片"}
-                      </span>
-                      <span
-                        onClick={handleUploadDescClick}
-                        className={"upload-desc"}
-                      >
-                        {option.uploadDesc || "按住Ctrl可多选"}
-                      </span>
-                      {option.needRemoveAll && (
-                        <span
-                          className={"remove-all-btn"}
-                          onClick={handleRemoveAll}
-                        >
-                          {option.removeAll || "清除全部"}
-                        </span>
-                      )}
-                      {option.uploadAddon && (
-                        <span
-                          className={"upload-addon"}
-                          onClick={handleUploadAddonClick}
-                        >
-                          {option.uploadAddon}
-                        </span>
-                      )}
-                    </Upload>
+    <DndProvider backend={Backend}>
+      <FilesContext.Provider value={{ dispatch, files, option }}>
+        <div className={cx(styles, "files-group")}>
+          <StickyContainer>
+            <table cellSpacing="0">
+              <colgroup>
+                <col width={option.groupWidth || "10%"} />
+                <col width={option.descWidth || "20%"} />
+                <col width={editable ? option.dropWidth || "35%" : ""} />
+                {editable && <col width={option.uploadWidth || "35%"} />}
+              </colgroup>
+              <thead>
+                <tr className="first-tr">
+                  <th key="group" className="first-th">
+                    {option.groupLabel || "要件类别"}
                   </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {groupElements.map((group, i) => (
-                <tr key={i}>{group}</tr>
-              ))}
-            </tbody>
-          </table>
-        </StickyContainer>
-      </div>
-    </FilesContext.Provider>
+                  <th key="desc">{option.descLabel || "说明"}</th>
+                  <th key="drop">{option.dropLabel || "拖放选择"}</th>
+                  {editable && (
+                    <th key="upload">
+                      <Upload onFiles={handleFiles} accept={option.accept}>
+                        <span className={"upload-btn"}>
+                          {option.uploadLabel || "选择图片"}
+                        </span>
+                        <span
+                          onClick={handleUploadDescClick}
+                          className={"upload-desc"}
+                        >
+                          {option.uploadDesc || "按住Ctrl可多选"}
+                        </span>
+                        {option.needRemoveAll && (
+                          <span
+                            className={"remove-all-btn"}
+                            onClick={handleRemoveAll}
+                          >
+                            {option.removeAll || "清除全部"}
+                          </span>
+                        )}
+                        {option.uploadAddon && (
+                          <span
+                            className={"upload-addon"}
+                            onClick={handleUploadAddonClick}
+                          >
+                            {option.uploadAddon}
+                          </span>
+                        )}
+                      </Upload>
+                    </th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {groupElements.map((group, i) => (
+                  <tr key={i}>{group}</tr>
+                ))}
+              </tbody>
+            </table>
+          </StickyContainer>
+        </div>
+      </FilesContext.Provider>
+    </DndProvider>
   );
 }

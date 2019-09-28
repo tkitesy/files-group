@@ -48,7 +48,7 @@ export default function SimpleUpload({ initFiles, option }) {
 
   useEffect(() => {
     option.onReady && option.onReady(dispatch);
-  }, []);
+  }, [option]);
 
   useEffect(
     function() {

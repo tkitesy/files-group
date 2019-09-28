@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState, useEffect } from "react";
+import React, { useRef, useContext, useState } from "react";
 import { css, cx } from "emotion";
 
 export const StickyContext = React.createContext({});
@@ -26,16 +26,10 @@ export function StickyContainer({ children }) {
 }
 
 export function Sticky({ children, className }) {
-  const [scroll, rect] = useContext(StickyContext);
+  const [scroll] = useContext(StickyContext);
   const ref = useRef(null);
-  const [topOffset, setTopOffset] = useState(0);
-  useEffect(() => {
-    if (rect) {
-      const topDiff = ref.current.getBoundingClientRect().top - rect.top;
-      setTopOffset(topDiff);
-    }
-  }, []);
-  const offset = Math.max((scroll || 0 ) - topOffset , 0);
+
+  const offset = Math.max(scroll, 0);
   const styles = css`
     height: auto;
     & > ul {

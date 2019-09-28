@@ -1,14 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, {  useContext } from "react";
 import Files from "./files";
 import { css, cx } from "emotion";
-import { FilesContext, getTransfer } from "./common";
+import { FilesContext } from "./common";
+import { useDrop } from "react-dnd";
 
 export default function GroupCard({ group, groupCount, onlyBody = false }) {
-  const { dispatch, files, option } = useContext(FilesContext);
-  const editable = option.editable !== false;
-  const [hover, setHover] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  // const [error, setError] = useState(null);
+  const { dispatch, files } = useContext(FilesContext);
   const groupedFiles = files.filter(file => file.group === group.groupName);
   let error = null;
   if (group.validate) {
@@ -16,39 +13,40 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
     error = error === true ? null : error;
   }
 
-  function handleDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    // const dataTransfer = e.dataTransfer;
-    const [action, fileid] = getTransfer(); 
-    if (!action) {
-      // const toAddFiles = Array.from(e.dataTransfer.files).map(file => ({
-      //   id: getId(),
-      //   file,
-      //   group: group.groupName
-      // }));
-      // Promise.all(addFilesLater(toAddFiles)).then(resolveFiles => {
-      //   dispatch({ type: "add-files", files: resolveFiles });
-      // });
-      return;
-    }
-
-    if (action === "move") {
-      dispatch({
-        type: "move-file",
-        fileid: fileid,
-        targetGroup: group.groupName
-      });
-    }
+  function handleDrop(item) {
+    dispatch({
+      type: "move-file",
+      fileid: item.file.id,
+      targetGroup: group.groupName
+    });
   }
 
-  function hanleDragOver(e) {
-    editable && e.preventDefault();
-  }
+  const [, drop] = useDrop({
+    accept: "move",
+    drop: handleDrop,
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  });
 
-  function handleDragEnter(e) {
-    e.preventDefault();
-  }
+  const [, drop1] = useDrop({
+    accept: "move",
+    drop: handleDrop,
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  });
+
+  const [, drop2] = useDrop({
+    accept: "move",
+    drop: handleDrop,
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  });
 
   const styles = css`
     .req {
@@ -71,57 +69,28 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
   return onlyBody ? (
     <td
       className={cx(styles, "group-card null-group-card last-td")}
-      onDrop={handleDrop}
-      onDragOver={hanleDragOver}
-      onDragEnter={handleDragEnter}
+      ref={drop}
       rowSpan={groupCount}
     >
       <div className={"error-message"}>{error || ""}</div>
-      <Files
-        needSticky={true}
-        files={groupedFiles}
-        setDragging={setDragging}
-        dragging={dragging}
-        hover={hover}
-        setHover={setHover}
-        group={group}
-      />
+      <Files needSticky={true} files={groupedFiles} group={group} />
       <div className={"error-message"}>{""}</div>
     </td>
   ) : (
     <>
-      <td
-        className={cx(styles, "group-card first-td")}
-        onDrop={handleDrop}
-        onDragOver={hanleDragOver}
-        onDragEnter={handleDragEnter}
-      >
+      <td className={cx(styles, "group-card first-td")} ref={drop}>
         <div className={"group-card-name"}>
           <span className="req">{group.required && "*"}</span>
           {group.groupTitle}
         </div>
       </td>
-      <td
-        className={cx(styles, "group-card")}
-        onDrop={handleDrop}
-        onDragOver={hanleDragOver}
-        onDragEnter={handleDragEnter}
-      >
+      <td className={cx(styles, "group-card")} ref={drop1}>
         <div className={"group-card-desc"}>{group.groupDesc}</div>
       </td>
-      <td
-        className={cx(styles, "group-card")}
-        onDrop={handleDrop}
-        onDragOver={hanleDragOver}
-        onDragEnter={handleDragEnter}
-      >
+      <td className={cx(styles, "group-card")} ref={drop2}>
         <div className={"error-message"}>{error || ""}</div>
         <Files
           files={groupedFiles}
-          setDragging={setDragging}
-          dragging={dragging}
-          hover={hover}
-          setHover={setHover}
           group={group}
         />
         <div className={"error-message"}>{""}</div>

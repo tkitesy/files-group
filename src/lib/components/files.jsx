@@ -2,10 +2,25 @@ import React, { useRef, useEffect, useContext } from "react";
 import { css, cx } from "emotion";
 import FileItem from "./file-item";
 import Viewer from "viewerjs";
-import { FilesContext, setTransfer } from "./common";
+import { FilesContext } from "./common";
 import { Sticky } from "./sticky";
+import { useDrag } from "react-dnd";
 
-export default function Files({ setDragging, files, needSticky = false }) {
+function DraggableFile({ file }) {
+  const [{dragging}, drag] = useDrag({
+    item: { file, type: "move" },
+    collect: monitor => ({
+      dragging: monitor.isDragging()
+    })
+  });
+  return (
+    <li ref={drag} key={file.id}>
+      <FileItem file={file} />
+    </li>
+  );
+}
+
+export default function Files({  files, needSticky = false }) {
   const { option } = useContext(FilesContext);
   const editable = option.editable !== false;
   const ref = useRef();
@@ -30,18 +45,6 @@ export default function Files({ setDragging, files, needSticky = false }) {
     }
   `;
 
-  function getHandleDragStart(file) {
-    return function handleDragStart(e) {
-      const dataTransfer = e.dataTransfer;
-      dataTransfer.setData("Text", "");
-      setTransfer(["move", file.id]);
-      setDragging(true);
-    };
-  }
-
-  function handleDragEnd(e) {
-    setDragging(false);
-  }
   useEffect(
     function() {
       const viewer = new Viewer(ref.current);
@@ -57,14 +60,7 @@ export default function Files({ setDragging, files, needSticky = false }) {
     <ul ref={ref}>
       {files.map(file =>
         editable ? (
-          <li
-            onDragStart={getHandleDragStart(file)}
-            onDragEnd={handleDragEnd}
-            draggable
-            key={file.id}
-          >
-            <FileItem file={file} />
-          </li>
+          <DraggableFile  key={file.id} file={file} />
         ) : (
           <li key={file.id} draggable={false}>
             <FileItem file={file} />

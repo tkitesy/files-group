@@ -44,6 +44,13 @@ export default function FileItem({ file: fileObj }) {
     .close-btn:hover {
       color: skyblue;
     }
+    &:hover .drag-fix {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      background-color: red;
+    }
     &:hover .img-mask {
       display: block;
     }
@@ -58,20 +65,24 @@ export default function FileItem({ file: fileObj }) {
       display: none;
     }
   `;
+
   function dispatchClick(e) {
+    e.stopPropagation();
+    e.preventDefault();
     ref.current.click();
   }
 
-  function preventEvent(e){
-    e.stopPropagation();
-    e.preventDefault();
+  function dispatchFixClick(e) {
+    ref.current.click();
   }
+
 
   return (
     <div className={cx(styles, "img-container")} id={`img-container-${id}`}>
-      {<img id={`img-${id}`} ref={ref} src={fileObj.url || fileObj.base64} />}
+      <img id={`img-${id}`} ref={ref} alt="empty" src={fileObj.url || fileObj.base64} />
+      <div className="drag-fix" draggable onClick={dispatchFixClick}></div>
       {editable && (
-        <div className="img-mask" onClick={dispatchClick} onClick={preventEvent}>
+        <div className="img-mask" onClick={dispatchClick} >
           <span className="close-btn" onClick={removeFile} title="删除">
             <RemoveIcon />
           </span>

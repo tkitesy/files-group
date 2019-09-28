@@ -105,6 +105,22 @@ const App = () => (
       />
     </div>
     <h1>hq</h1>
+    <FilesGroup
+        groups={groups}
+        option={{
+          needRemoveAll: true,
+          editable: false,
+          onChange: (files, errors) => {
+            console.log(files);
+            console.log(errors);
+          },
+          uploadAddon: "拍照",
+          onUploadAddonClick: function() {
+            console.log("onUploadAddonClick");
+          }
+        }}
+        initFiles={initFiles}
+      />
     <SimpleUpload
       option={{
         needRemoveAll: true,
