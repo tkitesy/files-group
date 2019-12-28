@@ -5,7 +5,9 @@ export default function Upload({
   children,
   accept = "image/*",
   className,
-  onFiles
+  onFiles,
+  disabled = false,
+  ... rest
 }) {
   const ref = useRef();
   function onChange(event) {
@@ -32,9 +34,16 @@ export default function Upload({
       height: 0;
     }
   `;
+  if(disabled) {
+    return (
+      <div className={cx(styles, "upload-container", className)} {...rest}>
+        {children}
+      </div>
+    )
+  }
 
   return (
-    <div onClick={onClick} className={cx(styles, "upload-container", className)}>
+    <div onClick={onClick} className={cx(styles, "upload-container", className)} {...rest}>
       {children}
       <input
         ref={ref}

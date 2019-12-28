@@ -157,7 +157,13 @@
         groupWidth: 100,
         descWidth: 100,
         dropWidth: 300,
-        uploadWidth: 300
+        uploadWidth: 300,
+        getUploadProps: function(unGroupedFiles) {
+          console.log("in getUploadProps: ", unGroupedFiles);
+          if(unGroupedFiles.length > 2){
+            return {disabled: true, className: "aaa"};
+          }
+        }
       };
 
       var ret = renderFilesGroup(

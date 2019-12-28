@@ -173,6 +173,9 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
     dispatch({ type: "remove-all-null" });
   }
 
+  const nullFiles = files.filter(file => file.group === 'null');
+  const uploadProps = option.getUploadProps ? option.getUploadProps(nullFiles, files): {};
+
   return (
     <DndProvider backend={Backend} options={{enableMouseEvents: true}}>
       <FilesContext.Provider value={{ dispatch, files, option }}>
@@ -195,7 +198,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
                   <th key="drop">{option.dropLabel || "拖放选择"}</th>
                   {editable && (
                     <th key="upload">
-                      <Upload onFiles={handleFiles} accept={option.accept}>
+                      <Upload onFiles={handleFiles} accept={option.accept} {...uploadProps}>
                         <span className={"upload-btn"}>
                           {option.uploadLabel || "选择图片"}
                         </span>

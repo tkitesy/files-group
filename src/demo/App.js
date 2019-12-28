@@ -99,6 +99,25 @@ const App = () => (
           uploadAddon: "拍照",
           onUploadAddonClick: function() {
             console.log("onUploadAddonClick");
+          },
+          getUploadProps: function(unGroupedFiles) {
+            console.log("in getUploadProps: ", unGroupedFiles);
+            if(unGroupedFiles){
+              // 计算未分类文件的大小和。
+              const sumSize = unGroupedFiles
+              .map(group => group.file.size)
+              .reduce((sum, size) => (sum + size), 0);
+              // disabled 可以禁用按钮的功能
+              if(sumSize > 6 * 1024) {
+                return {
+                  disabled: true, 
+                  style: {
+                     border: "1px solid red"
+                  },
+                  className: 'upload-has-error'
+                };
+              }
+            }
           }
         }}
         initFiles={initFiles}
