@@ -2,7 +2,7 @@ import React, { useRef, useContext } from "react";
 import { css, cx } from "emotion";
 import { FaTrashAlt as RemoveIcon } from "react-icons/fa";
 import { FilesContext } from "./common";
-export default function FileItem({ file: fileObj }) {
+export default function FileItem({ file: fileObj, group }) {
   const { dispatch, option } = useContext(FilesContext);
   const editable = option.editable !== false;
   const { id } = fileObj;
@@ -76,9 +76,15 @@ export default function FileItem({ file: fileObj }) {
     ref.current.click();
   }
 
+  let fileProps = {};
+  if(group && group.getFileProps) {
+     fileProps = group.getFileProps(fileObj) || {};
+  }
+
+  const {className, ...rest} = fileProps;
 
   return (
-    <div className={cx(styles, "img-container")} id={`img-container-${id}`}>
+    <div className={cx(styles, "img-container", className)} id={`img-container-${id}`} {...rest}>
       <img id={`img-${id}`} ref={ref} alt="empty" src={fileObj.url || fileObj.base64} />
       <div className="drag-fix" draggable onClick={dispatchFixClick}></div>
       {editable && (

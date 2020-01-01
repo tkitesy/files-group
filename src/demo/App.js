@@ -24,6 +24,16 @@ const groups = [
         return "文件大小必须小于500k";
       }
       return true;
+    },
+    getFileProps(file) {
+      if(file.file.size > 2 * 1024) {
+        return {
+          style: {
+             border: "1px solid red"
+          },
+          className: 'file-has-error'
+        };
+      }
     }
   },
   { groupName: "png", groupTitle: "png图片", groupDesc: "png files" },
@@ -100,24 +110,16 @@ const App = () => (
           onUploadAddonClick: function() {
             console.log("onUploadAddonClick");
           },
-          getUploadProps: function(unGroupedFiles) {
-            console.log("in getUploadProps: ", unGroupedFiles);
-            if(unGroupedFiles){
-              // 计算未分类文件的大小和。
-              const sumSize = unGroupedFiles
-              .map(group => group.file.size)
-              .reduce((sum, size) => (sum + size), 0);
-              // disabled 可以禁用按钮的功能
-              if(sumSize > 6 * 1024) {
+          getNullFileProps: function(file) {
+              if(file.file.size > 2 * 1024) {
                 return {
-                  disabled: true, 
                   style: {
                      border: "1px solid red"
                   },
-                  className: 'upload-has-error'
+                  className: 'file-has-error'
                 };
               }
-            }
+           
           }
         }}
         initFiles={initFiles}

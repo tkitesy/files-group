@@ -146,12 +146,32 @@
 
       groups.forEach(function(group) {
         group.validate = getValidateFn(group);
+        group.getFileProps = function(file) {
+          if (file.file.size > 3 * 1024) {
+            return {
+              style: {
+                border: "1px solid red"
+              },
+              className: "file-has-error"
+            };
+          }
+        };
       });
 
       var option = {
         onChange: function(files, errors) {
           console.log(files);
           console.log(errors);
+        },
+        getNullFileProps:function(file) {
+          if (file.file.size > 2 * 1024) {
+            return {
+              style: {
+                border: "1px solid red"
+              },
+              className: "file-has-error"
+            };
+          }
         },
         editable: true,
         groupWidth: 100,
@@ -160,8 +180,8 @@
         uploadWidth: 300,
         getUploadProps: function(unGroupedFiles) {
           console.log("in getUploadProps: ", unGroupedFiles);
-          if(unGroupedFiles.length > 2){
-            return {disabled: true, className: "aaa"};
+          if (unGroupedFiles.length > 2) {
+            return { disabled: true, className: "aaa" };
           }
         }
       };

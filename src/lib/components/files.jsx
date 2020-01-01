@@ -6,7 +6,7 @@ import { FilesContext } from "./common";
 import { Sticky } from "./sticky";
 import { useDrag } from "react-dnd";
 
-function DraggableFile({ file }) {
+function DraggableFile({ file, ...rest }) {
   const [{dragging}, drag] = useDrag({
     item: { file, type: "move" },
     collect: monitor => ({
@@ -16,12 +16,12 @@ function DraggableFile({ file }) {
   });
   return (
     <li ref={drag} key={file.id}>
-      <FileItem file={file} />
+      <FileItem file={file} {...rest} />
     </li>
   );
 }
 
-export default function Files({  files, needSticky = false }) {
+export default function Files({  files,group, needSticky = false }) {
   const { option } = useContext(FilesContext);
   const editable = option.editable !== false;
   const ref = useRef();
@@ -61,10 +61,10 @@ export default function Files({  files, needSticky = false }) {
     <ul ref={ref}>
       {files.map(file =>
         editable ? (
-          <DraggableFile  key={file.id} file={file} />
+          <DraggableFile group={group}  key={file.id} file={file} />
         ) : (
           <li key={file.id} draggable={false}>
-            <FileItem file={file} />
+            <FileItem file={file} group={group} />
           </li>
         )
       )}

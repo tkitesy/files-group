@@ -147,7 +147,7 @@ export default function FilesGroup({ groups, option = {}, initFiles = [] }) {
       key={"null"}
       onlyBody={true}
       groupCount={groups.length}
-      group={{ groupName: "null" }}
+      group={{ groupName: "null", getFileProps: option.getNullFileProps }}
     />
   );
 
