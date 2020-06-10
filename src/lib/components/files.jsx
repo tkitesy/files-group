@@ -59,12 +59,12 @@ export default function Files({  files,group, needSticky = false }) {
 
   const elements = (
     <ul ref={ref}>
-      {files.map(file =>
+      {files.map((file, index) =>
         editable ? (
-          <DraggableFile group={group}  key={file.id} file={file} />
+          <DraggableFile group={group} index={index}  key={file.id} file={file} />
         ) : (
-          <li key={file.id} draggable={false}>
-            <FileItem file={file} group={group} />
+          <li key={file.id}  draggable={false}>
+            <FileItem index={index} file={file} group={group} />
           </li>
         )
       )}

@@ -15,6 +15,9 @@ function reducer(state = [], action) {
     case "move-file":
       const { fileid, targetGroup } = action;
       const movingFile = state.find(file => file.id === fileid);
+      if(movingFile.group === targetGroup) {
+        return state;
+      }
       return state
         .filter(file => file.id !== fileid)
         .concat({

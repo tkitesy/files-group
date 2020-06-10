@@ -147,7 +147,8 @@
       groups.forEach(function(group) {
         group.validate = getValidateFn(group);
         group.getFileProps = function(file) {
-          if (file.file.size > 3 * 1024) {
+          // 每个组获取文件的属性方法，也可以根据需要像上面一样针对不同的group定制
+          if (file.file.size > 10 * 1024) {
             return {
               style: {
                 border: "1px solid red"
@@ -163,6 +164,7 @@
           console.log(files);
           console.log(errors);
         },
+        // 最右边的待选栏中文件属性的方法
         getNullFileProps:function(file) {
           if (file.file.size > 2 * 1024) {
             return {
