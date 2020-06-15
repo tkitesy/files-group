@@ -95,10 +95,10 @@ export default function FileItem({ file: fileObj, group, index }) {
   const {className, ...rest} = fileProps;
 
   return (
-    <div className={cx(styles, "img-container", className)} id={`img-container-${id}`} {...rest}>
+    <div className={cx(styles, "img-container", className)}  id={`img-container-${id}`} {...rest}>
       {index >= 0 && <span className={'file-item-num'}>{index + 1}</span>}
       <img id={`img-${id}`} ref={ref} alt="empty" src={fileObj.url || fileObj.base64} />
-      <div className="drag-fix" draggable onClick={dispatchFixClick}></div>
+      <div className="drag-fix" onClick={dispatchFixClick}></div>
       {editable && (
         <div className="img-mask" onClick={dispatchClick} >
           <span className="close-btn" onClick={removeFile} title="删除">
