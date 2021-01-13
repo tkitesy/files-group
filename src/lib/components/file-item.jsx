@@ -1,10 +1,10 @@
 import React, { useRef, useContext } from "react";
 import { css, cx } from "emotion";
 import { FaTrashAlt as RemoveIcon } from "react-icons/fa";
-import { FilesContext } from "./common";
+import { FilesContext, useEditable } from "./common";
 export default function FileItem({ file: fileObj, group, index }) {
   const { dispatch, option } = useContext(FilesContext);
-  const editable = option.editable !== false;
+  const editable = useEditable(group);
   const { id } = fileObj;
   const width = option.itemWidth || 80;
   const height = option.itemHeight || 120;

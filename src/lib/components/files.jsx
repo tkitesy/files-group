@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useContext } from "react";
 import { css, cx } from "emotion";
 import FileItem from "./file-item";
 import Viewer from "viewerjs";
-import { FilesContext } from "./common";
+import { FilesContext, useEditable } from "./common";
 import { Sticky } from "./sticky";
 import { useDrag } from "react-dnd";
 
@@ -23,7 +23,7 @@ function DraggableFile({ file, ...rest }) {
 
 export default function Files({  files,group, needSticky = false }) {
   const { option } = useContext(FilesContext);
-  const editable = option.editable !== false;
+  const editable = useEditable(group);
   const ref = useRef();
   const styles = css`
     min-height: 150px;

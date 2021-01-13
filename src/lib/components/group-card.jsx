@@ -1,12 +1,13 @@
-import React, {  useContext } from "react";
+import React, { useContext } from "react";
 import Files from "./files";
 import { css, cx } from "emotion";
-import { FilesContext } from "./common";
+import { FilesContext, useEditable } from "./common";
 import { useDrop } from "react-dnd";
 
 export default function GroupCard({ group, groupCount, onlyBody = false }) {
   const { dispatch, files } = useContext(FilesContext);
-  const groupedFiles = files.filter(file => file.group === group.groupName);
+  const groupedFiles = files.filter((file) => file.group === group.groupName);
+  const editable = useEditable(group);
   let error = null;
   if (group.validate) {
     error = group.validate(groupedFiles);
@@ -14,38 +15,40 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
   }
 
   function handleDrop(item) {
-    dispatch({
-      type: "move-file",
-      fileid: item.file.id,
-      targetGroup: group.groupName
-    });
+    if (editable) {
+      dispatch({
+        type: "move-file",
+        fileid: item.file.id,
+        targetGroup: group.groupName,
+      });
+    }
   }
 
   const [, drop] = useDrop({
     accept: "move",
     drop: handleDrop,
-    collect: monitor => ({
+    collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
+      canDrop: monitor.canDrop() && editable,
+    }),
   });
 
   const [, drop1] = useDrop({
     accept: "move",
     drop: handleDrop,
-    collect: monitor => ({
+    collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
+      canDrop: monitor.canDrop() && editable,
+    }),
   });
 
   const [, drop2] = useDrop({
     accept: "move",
     drop: handleDrop,
-    collect: monitor => ({
+    collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
+      canDrop: monitor.canDrop() && editable,
+    }),
   });
 
   const styles = css`
@@ -89,10 +92,7 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
       </td>
       <td className={cx(styles, "group-card")} ref={drop2}>
         <div className={"error-message"}>{error || ""}</div>
-        <Files
-          files={groupedFiles}
-          group={group}
-        />
+        <Files files={groupedFiles} group={group} />
         <div className={"error-message"}>{""}</div>
       </td>
     </>
