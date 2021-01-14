@@ -69,9 +69,15 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
     }
   `;
 
+  const diabledClassName = editable ? "" : "disabled";
+
   return onlyBody ? (
     <td
-      className={cx(styles, "group-card null-group-card last-td")}
+      className={cx(
+        styles,
+        "group-card null-group-card last-td",
+        diabledClassName
+      )}
       ref={drop}
       rowSpan={groupCount}
     >
@@ -81,16 +87,19 @@ export default function GroupCard({ group, groupCount, onlyBody = false }) {
     </td>
   ) : (
     <>
-      <td className={cx(styles, "group-card first-td")} ref={drop}>
+      <td
+        className={cx(styles, "group-card first-td", diabledClassName)}
+        ref={drop}
+      >
         <div className={"group-card-name"}>
           <span className="req">{group.required && "*"}</span>
           {group.groupTitle}
         </div>
       </td>
-      <td className={cx(styles, "group-card")} ref={drop1}>
+      <td className={cx(styles, "group-card", diabledClassName)} ref={drop1}>
         <div className={"group-card-desc"}>{group.groupDesc}</div>
       </td>
-      <td className={cx(styles, "group-card")} ref={drop2}>
+      <td className={cx(styles, "group-card", diabledClassName)} ref={drop2}>
         <div className={"error-message"}>{error || ""}</div>
         <Files files={groupedFiles} group={group} />
         <div className={"error-message"}>{""}</div>
