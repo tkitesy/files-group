@@ -58,7 +58,7 @@ export default function Files({  files,group, needSticky = false }) {
   );
 
   const elements = (
-    <ul ref={ref}>
+    <ul ref={ref} className="files-container">
       {files.map((file, index) =>
         editable ? (
           <DraggableFile group={group} index={index}  key={file.id} file={file} />
