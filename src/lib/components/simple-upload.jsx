@@ -11,7 +11,7 @@ function reducer(state = [], action) {
       return state.concat(action.files);
     case "remove-file":
       const { id } = action;
-      return state.filter(file => file.id !== id);
+      return state.filter((file) => file.id !== id);
     case "reset-files":
       const { files } = action;
       return files.slice();
@@ -51,10 +51,10 @@ export default function SimpleUpload({ initFiles, option }) {
   }, [option]);
 
   useEffect(
-    function() {
+    function () {
       const viewer = new Viewer(ref.current);
       viewer.update();
-      return function() {
+      return function () {
         viewer.destroy();
       };
     },
@@ -62,15 +62,15 @@ export default function SimpleUpload({ initFiles, option }) {
   );
 
   useEffect(() => {
-    const files = initFiles.map(file => {
+    const files = initFiles.map((file) => {
       return {
         base64: file.base64,
         id: file.id || getId(),
         file: {
           size: file.size,
           name: file.name,
-          type: file.type
-        }
+          type: file.type,
+        },
       };
     });
 
@@ -81,7 +81,7 @@ export default function SimpleUpload({ initFiles, option }) {
     const { onChange } = option;
     const ret = {};
     const nRet = [];
-    files.forEach(file => {
+    files.forEach((file) => {
       ret[file.group] = ret[file.group] || [];
       ret[file.group].push(file);
       nRet.push({
@@ -90,7 +90,7 @@ export default function SimpleUpload({ initFiles, option }) {
         type: file.file.type,
         base64: file.base64,
         url: file.url,
-        id: file.id
+        id: file.id,
       });
     });
     let errs = null;
@@ -104,11 +104,11 @@ export default function SimpleUpload({ initFiles, option }) {
   }, [files, option]);
 
   function handleFiles(files) {
-    const toAddFiles = Array.from(files).map(file => ({
+    const toAddFiles = Array.from(files).map((file) => ({
       id: getId(),
-      file
+      file,
     }));
-    Promise.all(addFilesLater(toAddFiles)).then(resolveFiles => {
+    Promise.all(addFilesLater(toAddFiles)).then((resolveFiles) => {
       dispatch({ type: "add-files", files: resolveFiles });
     });
   }
@@ -156,9 +156,9 @@ export default function SimpleUpload({ initFiles, option }) {
         <div className="file-list">
           <div className="error">{errs}</div>
           <ul ref={ref}>
-            {files.map(file => (
+            {files.map((file) => (
               <li key={file.id}>
-                <FileItem file={file} />
+                <FileItem group={{}} file={file} />
               </li>
             ))}
           </ul>

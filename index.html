@@ -23,6 +23,7 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div id="root2"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -69,7 +70,7 @@
             "data:image/jpeg;base64,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"
         },
         {
-          groupName: "png",
+          groupName: "null",
           size: 2095,
           name: "77x77.jpg",
           type: "image/jpeg",
@@ -190,6 +191,11 @@
 
       var ret = renderFilesGroup(
         document.getElementById("root"),
+        groups,
+        option
+      );
+       ret = renderFilesGroup(
+        document.getElementById("root2"),
         groups,
         option
       );
