@@ -101,15 +101,17 @@ const App = () => (
         groups={groups}
         option={{
           needRemoveAll: true,
-          editable: {jpg: true},
+          editable: { jpg: true },
           onChange: (files, errors) => {
             console.log(files);
             console.log(errors);
           },
+          onPdfClick: (f) => console.log(f),
           uploadAddon: "拍照",
           onUploadAddonClick: function () {
             console.log("onUploadAddonClick");
           },
+          accept: "*/*",
           getNullFileProps: function (file) {
             if (file.file.size > 2 * 1024) {
               return {

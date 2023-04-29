@@ -9,7 +9,7 @@ export function useEditable(group) {
   const { option } = React.useContext(FilesContext);
   const editable = option.editable;
   if (!group) return false;
-  if(group.groupName === "null") return true;
+  if (group.groupName === "null") return true;
   if (editable === undefined) {
     return true;
   }
@@ -31,6 +31,7 @@ export function useEditable(group) {
 export function addFilesLater(files) {
   return files.map((fileObj) => {
     const { file } = fileObj;
+    console.log(file);
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);

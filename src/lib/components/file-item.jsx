@@ -5,7 +5,7 @@ import { FilesContext, useEditable } from "./common";
 export default function FileItem({ file: fileObj, group, index }) {
   const { dispatch, option } = useContext(FilesContext);
   const editable = useEditable(group);
-  const { id } = fileObj;
+  const { id, file } = fileObj;
   const width = option.itemWidth || 80;
   const height = option.itemHeight || 120;
   const ref = useRef();
@@ -87,20 +87,45 @@ export default function FileItem({ file: fileObj, group, index }) {
     ref.current.click();
   }
 
-  let fileProps = {};
-  if(group && group.getFileProps) {
-     fileProps = group.getFileProps(fileObj) || {};
+  function handlePdfClick() {
+    if (option.onPdfClick) {
+      option.onPdfClick(fileObj);
+    }
   }
 
-  const {className, ...rest} = fileProps;
+  let fileProps = {};
+  if (group && group.getFileProps) {
+    fileProps = group.getFileProps(fileObj) || {};
+  }
+
+  const { className, ...rest } = fileProps;
+
+  const isPdf = file.type === "application/pdf";
 
   return (
-    <div className={cx(styles, "img-container", className)}  id={`img-container-${id}`} {...rest}>
-      {index >= 0 && <span className={'file-item-num'}>{index + 1}</span>}
-      <img id={`img-${id}`} ref={ref} alt="empty" src={fileObj.url || fileObj.base64} />
+    <div
+      className={cx(styles, "img-container", className)}
+      id={`img-container-${id}`}
+      {...rest}
+    >
+      {index >= 0 && <span className={"file-item-num"}>{index + 1}</span>}
+      {!isPdf && (
+        <img
+          id={`img-${id}`}
+          ref={ref}
+          alt="empty"
+          src={fileObj.url || fileObj.base64}
+        />
+      )}
+      {isPdf && (
+        <div ref={ref} className="pdf-file-item" onClick={handlePdfClick}>
+          <div className="pdf-file-placeholder"></div>
+          <span>{file.name}</span>
+        </div>
+      )}
       <div className="drag-fix" onClick={dispatchFixClick}></div>
       {editable && (
-        <div className="img-mask" onClick={dispatchClick} >
+        <div className="img-mask" onClick={dispatchClick}>
           <span className="close-btn" onClick={removeFile} title="删除">
             <RemoveIcon />
           </span>
